@@ -18,8 +18,9 @@ class _AppState extends State<App> with RouteStateMixin {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
+    key: _preserveKey,
     title: 'Declarative Navigation',
     debugShowCheckedModeBanner: false,
-    builder: (context, _) => Elixir(key: _preserveKey, pages: initialPages, guards: guards),
+    builder: (context, _) => Elixir(pages: initialPages, guards: guards),
   );
 }

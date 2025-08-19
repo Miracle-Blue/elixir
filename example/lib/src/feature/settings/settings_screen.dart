@@ -1,5 +1,4 @@
 import 'package:elixir/elixir.dart';
-import 'package:example/src/common/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 /// {@template settings_screen}
@@ -7,17 +6,19 @@ import 'package:flutter/material.dart';
 /// {@endtemplate}
 class SettingsScreen extends StatelessWidget {
   /// {@macro settings_screen}
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, required this.data});
+
+  final String data;
 
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
-        onPressed: () => Elixir.change(context, (state) => state..removeWhere((p) => p.name == Routes.settings.name)),
+        onPressed: () => Elixir.change(context, (state) => state..removeLast()),
       ),
       title: const Text('Settings'),
     ),
-    body: const SafeArea(child: Center(child: Text('Settings'))),
+    body: SafeArea(child: Center(child: Text('data: $data'))),
   );
 }

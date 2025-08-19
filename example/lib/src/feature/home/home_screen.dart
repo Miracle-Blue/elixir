@@ -14,7 +14,12 @@ class HomeScreen extends StatelessWidget {
     appBar: AppBar(
       title: const Text('Home'),
       actions: [
-        IconButton(icon: const Icon(Icons.settings), onPressed: () => Elixir.push(context, Routes.settings.page())),
+        IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Elixir.push(context, SettingsPage(data: 'Home data'));
+          },
+        ),
       ],
     ),
     body: const SafeArea(child: Center(child: Text('Home'))),

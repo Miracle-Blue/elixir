@@ -1,19 +1,19 @@
 import 'package:elixir/elixir.dart';
-import 'package:example/src/feature/home/home_screen.dart';
+import 'package:example/src/common/routes/routes.dart';
 import 'package:flutter/material.dart';
 
 mixin RouteStateMixin<T extends StatefulWidget> on State<T> {
-  late List<Page<void>> initialPages;
+  late ElixirNavigationState initialPages;
 
-  late List<ElixirGuard> guards;
+  late ElixirGuard guards;
 
   @override
   void initState() {
     super.initState();
-    initialPages = const [MaterialPage<void>(child: HomeScreen())];
+    initialPages = [HomePage()];
 
     guards = [
-      (pages) => pages.length > 1 ? pages : [const MaterialPage(child: HomeScreen())],
+      (context, state) => state.length > 1 ? state : [HomePage()],
     ];
   }
 }
