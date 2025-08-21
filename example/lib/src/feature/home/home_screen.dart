@@ -16,9 +16,7 @@ class HomeScreen extends StatelessWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.settings),
-          onPressed: () {
-            Elixir.push(context, SettingsPage(data: 'Home data'));
-          },
+          onPressed: () => context.elixir.push(SettingsPage(data: 'Data from home')),
         ),
       ],
     ),

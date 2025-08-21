@@ -12,10 +12,14 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.cyan,
     appBar: AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
-        onPressed: () => Elixir.change(context, (state) => state..removeLast()),
+        onPressed:
+            () => context.elixir.change((state) {
+              return state.where((e) => !e.tags.contains('settings')).toList();
+            }),
       ),
       title: const Text('Settings'),
     ),
