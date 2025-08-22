@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 @immutable
-abstract class ElixirPage extends Page<void> {
+abstract base class ElixirPage extends Page<void> {
   const ElixirPage({
     required String super.name,
     required this.child,
