@@ -8,7 +8,7 @@ import 'custom_route_transitions.dart';
 /// Type definition for the page.
 @immutable
 sealed class AppPage extends ElixirPage {
-  const AppPage({required super.name, required super.child, required super.arguments, super.key});
+  const AppPage({required super.name, required super.child, super.arguments, super.key});
 
   @override
   int get hashCode => key.hashCode;
@@ -18,7 +18,7 @@ sealed class AppPage extends ElixirPage {
 }
 
 final class HomePage extends AppPage {
-  const HomePage({super.arguments}) : super(child: const HomeScreen(), name: 'home_page');
+  const HomePage() : super(child: const HomeScreen(), name: 'home_page');
 
   @override
   Route<void> createRoute(BuildContext context) => CustomMaterialRoute(page: this);
@@ -28,8 +28,7 @@ final class HomePage extends AppPage {
 }
 
 final class SettingsPage extends AppPage {
-  SettingsPage({required final String data, super.arguments})
-    : super(child: SettingsScreen(data: data), name: 'settings_page');
+  SettingsPage({required final String data}) : super(child: SettingsScreen(data: data), name: 'settings_page');
 
   @override
   Route<void> createRoute(BuildContext context) => CustomMaterialRoute(page: this);
