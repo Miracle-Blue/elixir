@@ -1,6 +1,7 @@
 import 'package:elixir/elixir.dart';
-import 'package:example/src/common/routes/routes.dart';
 import 'package:flutter/material.dart';
+
+import '../../common/routes/routes.dart';
 
 /// {@template home_screen}
 /// HomeScreen widget.

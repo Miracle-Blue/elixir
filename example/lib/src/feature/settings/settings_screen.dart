@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// {@endtemplate}
 class SettingsScreen extends StatelessWidget {
   /// {@macro settings_screen}
-  const SettingsScreen({super.key, required this.data});
+  const SettingsScreen({required this.data, super.key});
 
   final String data;
 
@@ -16,10 +16,7 @@ class SettingsScreen extends StatelessWidget {
     appBar: AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
-        onPressed:
-            () => context.elixir.change((state) {
-              return state.where((e) => !e.tags.contains('settings')).toList();
-            }),
+        onPressed: () => context.elixir.change((state) => state.where((e) => !e.tags.contains('settings')).toList()),
       ),
       title: const Text('Settings'),
     ),

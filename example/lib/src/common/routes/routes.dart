@@ -1,8 +1,8 @@
 import 'package:elixir/elixir.dart';
-import 'package:example/src/feature/home/home_screen.dart';
-import 'package:example/src/feature/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../feature/home/home_screen.dart';
+import '../../feature/settings/settings_screen.dart';
 import 'custom_route_transitions.dart';
 
 /// Type definition for the page.

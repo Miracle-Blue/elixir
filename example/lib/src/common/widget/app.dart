@@ -1,6 +1,7 @@
 import 'package:elixir/elixir.dart';
-import 'package:example/src/common/routes/route_state_mixin.dart';
 import 'package:flutter/material.dart';
+
+import '../routes/route_state_mixin.dart';
 
 /// {@template app}
 /// App widget.

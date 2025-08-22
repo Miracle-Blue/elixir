@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:example/src/common/widget/app.dart';
 import 'package:flutter/material.dart';
+
+import 'src/common/widget/app.dart';
 
 void main() => runZonedGuarded<void>(
   () => runApp(const App()),

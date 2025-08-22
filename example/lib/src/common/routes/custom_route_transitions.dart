@@ -34,5 +34,5 @@ class CustomMaterialRoute extends PageRoute<void> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
-  ) => ZoomPageTransitionsBuilder().buildTransitions(this, context, animation, secondaryAnimation, child);
+  ) => const ZoomPageTransitionsBuilder().buildTransitions(this, context, animation, secondaryAnimation, child);
 }
