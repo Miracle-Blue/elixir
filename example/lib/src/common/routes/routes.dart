@@ -21,9 +21,6 @@ final class HomePage extends AppPage {
   const HomePage() : super(child: const HomeScreen(), name: 'home_page');
 
   @override
-  Route<void> createRoute(BuildContext context) => CustomMaterialRoute(page: this);
-
-  @override
   Set<String> get tags => {'home'};
 }
 

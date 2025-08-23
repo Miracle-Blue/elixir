@@ -1,3 +1,6 @@
+import 'dart:io' as io;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +16,14 @@ abstract base class ElixirPage extends Page<void> {
   final Widget child;
 
   abstract final Set<String> tags;
+
+  @override
+  Route<void> createRoute(BuildContext context) {
+    if (io.Platform.isIOS) {
+      return CupertinoPageRoute(builder: (context) => child, settings: this);
+    }
+    return MaterialPageRoute(builder: (context) => child, settings: this);
+  }
 
   @override
   String get name => super.name ?? 'Unknown';
