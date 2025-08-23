@@ -1,7 +1,4 @@
-import 'dart:io' as io;
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show shortHash;
 import 'package:flutter/material.dart';
 
 @immutable
@@ -18,12 +15,7 @@ abstract base class ElixirPage extends Page<void> {
   abstract final Set<String> tags;
 
   @override
-  Route<void> createRoute(BuildContext context) {
-    if (io.Platform.isIOS) {
-      return CupertinoPageRoute(builder: (context) => child, settings: this);
-    }
-    return MaterialPageRoute(builder: (context) => child, settings: this);
-  }
+  Route<void> createRoute(BuildContext context) => MaterialPageRoute(builder: (context) => child, settings: this);
 
   @override
   String get name => super.name ?? 'Unknown';
