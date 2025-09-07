@@ -3,7 +3,8 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../elixir.dart';
+import 'elixir_page.dart';
+import 'observer.dart';
 
 /// Type definition for the navigation state.
 typedef ElixirNavigationState = List<ElixirPage>;
@@ -93,8 +94,12 @@ class Elixir extends StatefulWidget {
 /// State for widget AppNavigator.
 class ElixirState extends State<Elixir> with WidgetsBindingObserver {
   /// The current [Navigator] state (null if not yet built).
-  NavigatorState? get navigator => _observer.navigator;
-  final NavigatorObserver _observer = NavigatorObserver();
+  NavigatorState? get navigator => _navigatorObserver.navigator;
+  final NavigatorObserver _navigatorObserver = NavigatorObserver();
+
+  /// The custom observer.
+  late final ElixirObserver$NavigatorImpl _observer;
+  ElixirStateObserver get observer => _observer;
 
   /// The current pages list.
   ElixirNavigationState get state => _state;
@@ -108,7 +113,10 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     super.initState();
     _state = widget.pages;
     widget.revalidate?.addListener(revalidate);
-    _observers = <NavigatorObserver>[_observer, ...widget.observers];
+
+    _observer = ElixirObserver$NavigatorImpl(widget.pages);
+
+    _observers = <NavigatorObserver>[_navigatorObserver, ...widget.observers];
     widget.controller?.addListener(_controllerListener);
     _controllerListener();
     WidgetsBinding.instance.addObserver(this);
@@ -128,7 +136,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
       widget.revalidate?.addListener(revalidate);
     }
     if (!identical(widget.observers, oldWidget.observers)) {
-      _observers = <NavigatorObserver>[_observer, ...widget.observers];
+      _observers = <NavigatorObserver>[_navigatorObserver, ...widget.observers];
     }
     if (!identical(widget.controller, oldWidget.controller)) {
       oldWidget.controller?.removeListener(_controllerListener);
@@ -206,6 +214,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     final next = widget.guards.fold(_state.toList(), (s, g) => g(ctx, s));
     if (next.isEmpty || listEquals(next, _state)) return;
     _state = UnmodifiableListView<ElixirPage>(next);
+    _observer.changeState((_) => _state);
     _setStateToController();
     setState(() {});
   }
@@ -220,6 +229,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     next = widget.guards.fold(next, (s, g) => g(ctx, s));
     if (next.isEmpty || listEquals(next, _state)) return;
     _state = UnmodifiableListView<ElixirPage>(next);
+    _observer.changeState((_) => _state);
     _setStateToController();
     setState(() {});
   }
@@ -235,6 +245,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     child: Navigator(
       pages: _state,
       reportsRouteUpdateToEngine: false,
+      restorationScopeId: 'elixir_navigator',
       transitionDelegate: widget.transitionDelegate,
       onDidRemovePage: (page) => _onDidRemovePage(page as ElixirPage),
       observers: _observers,

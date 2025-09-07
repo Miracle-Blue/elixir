@@ -15,17 +15,20 @@ sealed class AppPage extends ElixirPage {
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is AppPage && key == other.key;
+
+  @override
+  String toString() => '/$name${arguments.isEmpty ? '' : '~$arguments'}';
 }
 
 final class HomePage extends AppPage {
-  const HomePage() : super(child: const HomeScreen(), name: 'home_page');
+  const HomePage() : super(child: const HomeScreen(), name: 'home');
 
   @override
   Set<String> get tags => {'home'};
 }
 
 final class SettingsPage extends AppPage {
-  SettingsPage({required final String data}) : super(child: SettingsScreen(data: data), name: 'settings_page');
+  SettingsPage({required final String data}) : super(child: SettingsScreen(data: data), name: 'settings');
 
   @override
   Route<void> createRoute(BuildContext context) => CustomMaterialRoute(page: this);
