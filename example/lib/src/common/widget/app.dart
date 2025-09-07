@@ -22,6 +22,6 @@ class _AppState extends State<App> with RouteStateMixin {
     key: _preserveKey,
     title: 'Declarative Navigation',
     debugShowCheckedModeBanner: false,
-    builder: (context, _) => Elixir(pages: initialPages, guards: guards),
+    builder: (context, _) => Elixir.controlled(controller: ValueNotifier(initialPages), guards: guards),
   );
 }

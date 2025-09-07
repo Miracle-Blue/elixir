@@ -114,7 +114,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     _state = widget.pages;
     widget.revalidate?.addListener(revalidate);
 
-    _observer = ElixirObserver$NavigatorImpl(widget.pages);
+    _observer = ElixirObserver$NavigatorImpl(_state);
 
     _observers = <NavigatorObserver>[_navigatorObserver, ...widget.observers];
     widget.controller?.addListener(_controllerListener);
@@ -189,6 +189,8 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
         ..value = _state
         ..addListener(_controllerListener);
     }
+
+    _observer.changeState((_) => _state);
   }
 
   void _controllerListener() {
@@ -214,7 +216,6 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     final next = widget.guards.fold(_state.toList(), (s, g) => g(ctx, s));
     if (next.isEmpty || listEquals(next, _state)) return;
     _state = UnmodifiableListView<ElixirPage>(next);
-    _observer.changeState((_) => _state);
     _setStateToController();
     setState(() {});
   }
@@ -229,7 +230,6 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     next = widget.guards.fold(next, (s, g) => g(ctx, s));
     if (next.isEmpty || listEquals(next, _state)) return;
     _state = UnmodifiableListView<ElixirPage>(next);
-    _observer.changeState((_) => _state);
     _setStateToController();
     setState(() {});
   }
