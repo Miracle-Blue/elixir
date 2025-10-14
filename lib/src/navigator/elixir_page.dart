@@ -34,8 +34,9 @@ abstract base class ElixirPage extends Page<void> {
   };
 
   @override
-  int get hashCode => key.hashCode;
+  int get hashCode => Object.hashAll([key, name]);
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is ElixirPage && key == other.key;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is ElixirPage && key == other.key && name == other.name;
 }
