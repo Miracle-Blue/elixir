@@ -228,17 +228,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     if (!mounted) return;
     final ctx = context;
     next = widget.guards.fold(next, (s, g) => g(ctx, s));
-
-    var hasNoDuplicate = true;
-    for (var i = 0; i < _state.length; i++) {
-      if (next.where((e) => e == _state[i]).length > 1) {
-        hasNoDuplicate = false;
-        break;
-      }
-    }
-    assert(hasNoDuplicate, 'Didn\'t pass the same page');
-    if (next.isEmpty || !hasNoDuplicate) return;
-
+    if (next.isEmpty || listEquals(next, _state)) return;
     _state = UnmodifiableListView<ElixirPage>(next);
     _setStateToController();
     setState(() {});
