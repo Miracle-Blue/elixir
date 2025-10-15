@@ -23,7 +23,7 @@ extension ElixirControllerExtension on ValueNotifier<ElixirNavigationState> {
       }
     }
     assert(isNotHaveSamePage, 'Didn\'t pass the same page');
-    if (next.isEmpty || isNotHaveSamePage) return;
+    if (next.isEmpty || !isNotHaveSamePage) return;
 
     value = UnmodifiableListView<ElixirPage>(next);
   }
