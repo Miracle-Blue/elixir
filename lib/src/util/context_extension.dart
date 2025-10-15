@@ -15,15 +15,15 @@ extension ElixirControllerExtension on ValueNotifier<ElixirNavigationState> {
     var next = fn(prev);
     if (next.isEmpty) return;
 
-    var haveSamePage = false;
+    var isNotHaveSamePage = true;
     for (var i = 0; i < value.length; i++) {
       if (next.where((e) => e == value[i]).length > 1) {
-        haveSamePage = true;
+        isNotHaveSamePage = false;
         break;
       }
     }
-    assert(haveSamePage, 'Didn\'t pass the same page');
-    if (next.isEmpty || haveSamePage) return;
+    assert(isNotHaveSamePage, 'Didn\'t pass the same page');
+    if (next.isEmpty || isNotHaveSamePage) return;
 
     value = UnmodifiableListView<ElixirPage>(next);
   }
