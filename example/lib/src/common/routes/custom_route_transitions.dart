@@ -1,3 +1,4 @@
+import 'package:elixir/elixir.dart';
 import 'package:flutter/material.dart';
 
 import 'routes.dart';
@@ -11,6 +12,9 @@ class CustomMaterialRoute extends PageRoute<void> {
 
   /// {@macro custom_material_route}
   AppPage get page => settings as AppPage;
+
+  @override
+  bool get popGestureEnabled => true;
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
@@ -34,5 +38,21 @@ class CustomMaterialRoute extends PageRoute<void> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
     Widget child,
-  ) => const ZoomPageTransitionsBuilder().buildTransitions(this, context, animation, secondaryAnimation, child);
+  ) => const ZoomPageTransitionsBuilder().buildTransitions(
+    this,
+    context,
+    animation,
+    secondaryAnimation,
+    CupertinoBackGestureDetector<void>(
+      enabledCallback: () => popGestureEnabled,
+      onStartPopGesture:
+          () => CupertinoBackGestureController<void>(
+            navigator: navigator!,
+            getIsActive: () => isActive,
+            getIsCurrent: () => isCurrent,
+            controller: controller!, // protected access
+          ),
+      child: child,
+    ),
+  );
 }

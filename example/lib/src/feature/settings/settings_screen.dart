@@ -1,6 +1,8 @@
 import 'package:elixir/elixir.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/widget/app.dart';
+
 /// {@template settings_screen}
 /// SettingsScreen widget.
 /// {@endtemplate}
@@ -16,7 +18,9 @@ class SettingsScreen extends StatelessWidget {
     appBar: AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
-        onPressed: () => context.elixir.change((state) => state.where((e) => !e.tags.contains('settings')).toList()),
+        onPressed:
+            () =>
+                App.controllerOf(context)?.change((state) => state.where((e) => !e.tags.contains('settings')).toList()),
       ),
       title: const Text('Settings'),
     ),

@@ -4,6 +4,7 @@ import 'package:elixir/elixir.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/routes/routes.dart';
+import '../../common/widget/app.dart';
 
 ElixirStateObserver? elixirStateObserver;
 
@@ -44,7 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         IconButton(
           icon: const Icon(Icons.settings),
-          onPressed: () => context.elixir.push(SettingsPage(data: 'Data from home')),
+          onPressed:
+              () => App.controllerOf(context)?.change((state) => [...state, SettingsPage(data: 'Data from home')]),
         ),
       ],
     ),
