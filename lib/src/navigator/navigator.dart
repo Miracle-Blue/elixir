@@ -165,7 +165,10 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
 
   /// PopUntil the last page with the given tag.
   void popUntil(ElixirAlias tag) => change(
-    (state) => [...state.takeWhile((page) => page.alias != tag), state.firstWhere((page) => page.alias == tag)],
+    (state) => [
+      ...state.takeWhile((page) => page.alias != tag),
+      ?state.skipWhile((page) => page.alias != tag).firstOrNull,
+    ],
   );
 
   /// Clear the pages to the initial state.
@@ -267,17 +270,15 @@ class _InheritedElixir extends InheritedWidget {
   /// The state from the closest instance of this class
   /// that encloses the given context, if any.
   /// For example: `Elixir.maybeOf(context)`.
-  static _InheritedElixir? maybeOf(BuildContext context, {bool listen = true}) =>
-      listen
-          ? context.dependOnInheritedWidgetOfExactType<_InheritedElixir>()
-          : context.getInheritedWidgetOfExactType<_InheritedElixir>();
+  static _InheritedElixir? maybeOf(BuildContext context, {bool listen = true}) => listen
+      ? context.dependOnInheritedWidgetOfExactType<_InheritedElixir>()
+      : context.getInheritedWidgetOfExactType<_InheritedElixir>();
 
-  static Never _notFoundInheritedWidgetOfExactType() =>
-      throw ArgumentError(
-        'Out of scope, not found inherited widget '
-            'a _InheritedElixir of the exact type',
-        'out_of_scope',
-      );
+  static Never _notFoundInheritedWidgetOfExactType() => throw ArgumentError(
+    'Out of scope, not found inherited widget '
+        'a _InheritedElixir of the exact type',
+    'out_of_scope',
+  );
 
   /// The state from the closest instance of this class
   /// that encloses the given context.

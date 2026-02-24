@@ -21,6 +21,9 @@ extension ElixirControllerExtension on ValueNotifier<ElixirNavigationState> {
 
   /// Pop until the last page with the given tag.
   void popUntil(ElixirAlias tag) => change(
-    (state) => [...state.takeWhile((page) => page.alias != tag), state.firstWhere((page) => page.alias == tag)],
+    (state) => [
+      ...state.takeWhile((page) => page.alias != tag),
+      ?state.skipWhile((page) => page.alias != tag).firstOrNull,
+    ],
   );
 }
