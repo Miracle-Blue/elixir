@@ -15,6 +15,7 @@ mixin RouteStateMixin<T extends StatefulWidget> on State<T> {
 
     guards = [
       (context, state) => state.length > 1 ? state : [const HomePage()],
+      (context, state) => state.toSet().toList(),
     ];
   }
 }

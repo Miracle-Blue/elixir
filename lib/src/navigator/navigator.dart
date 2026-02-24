@@ -163,6 +163,11 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     return state;
   });
 
+  /// PopUntil the last page with the given tag.
+  void popUntil(ElixirAlias tag) => change(
+    (state) => [...state.takeWhile((page) => page.alias != tag), state.firstWhere((page) => page.alias == tag)],
+  );
+
   /// Clear the pages to the initial state.
   void reset(ElixirPage page) => change((_) => widget.pages);
 
