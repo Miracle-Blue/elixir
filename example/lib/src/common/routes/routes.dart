@@ -50,7 +50,7 @@ final class HomePage extends AppPage {
   Set<String> get tags => {'home'};
 
   @override
-  ElixirAlias get alias => Routes.home;
+  Routes get alias => Routes.home;
 }
 
 final class SettingsPage extends AppPage {
@@ -63,5 +63,5 @@ final class SettingsPage extends AppPage {
   Set<String> get tags => {'settings'};
 
   @override
-  ElixirAlias get alias => Routes.settings;
+  Routes get alias => Routes.settings;
 }
