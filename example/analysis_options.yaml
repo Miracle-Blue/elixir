@@ -233,8 +233,3 @@ linter:
     hash_and_equals: true
     avoid_equals_and_hash_code_on_mutable_classes: true
     unnecessary_underscores: true
-
-    # Formatter settings
-    formatter:
-      line_length: 120
-      trailing_commas: always

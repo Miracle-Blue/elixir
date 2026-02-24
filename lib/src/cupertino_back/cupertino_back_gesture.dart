@@ -29,7 +29,7 @@ class CupertinoBackGestureDetector<T> extends StatefulWidget {
   final ValueGetter<CupertinoBackGestureController<T>> onStartPopGesture;
 
   @override
-  _CupertinoBackGestureDetectorState<T> createState() => _CupertinoBackGestureDetectorState<T>();
+  State<CupertinoBackGestureDetector<T>> createState() => _CupertinoBackGestureDetectorState<T>();
 }
 
 class _CupertinoBackGestureDetectorState<T> extends State<CupertinoBackGestureDetector<T>> {

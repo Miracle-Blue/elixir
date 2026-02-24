@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 @immutable
 abstract base class ElixirPage extends Page<void> {
   const ElixirPage({
-    required String super.name,
+    required super.name,
     required this.child,
     required Map<String, Object?>? super.arguments,
     super.key,
@@ -14,11 +14,13 @@ abstract base class ElixirPage extends Page<void> {
 
   abstract final Set<String> tags;
 
+  abstract final ElixirAlias alias;
+
   @override
   Route<void> createRoute(BuildContext context) => MaterialPageRoute(builder: (context) => child, settings: this);
 
   @override
-  String get name => super.name ?? 'Unknown';
+  String get name => alias.alias;
 
   @override
   LocalKey get key => switch ((super.key, super.arguments)) {
@@ -39,4 +41,8 @@ abstract base class ElixirPage extends Page<void> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) || other is ElixirPage && key == other.key && name == other.name;
+}
+
+abstract interface class ElixirAlias {
+  String get alias;
 }

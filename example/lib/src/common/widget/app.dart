@@ -43,7 +43,7 @@ class _AppState extends State<App> with RouteStateMixin {
         (context, _) => Elixir.controlled(
           controller: _controller,
           guards: guards,
-          onBackButtonPressed: (state) => (handled: true, state: (state..removeLast()).toList()),
+          // onBackButtonPressed: (state) => (handled: true, state: (state..removeLast()).toList()),
         ),
   );
 }

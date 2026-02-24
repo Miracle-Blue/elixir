@@ -1,6 +1,7 @@
 import 'package:elixir/elixir.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/routes/routes.dart';
 import '../../common/widget/app.dart';
 
 /// {@template settings_screen}
@@ -19,8 +20,7 @@ class SettingsScreen extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed:
-            () =>
-                App.controllerOf(context)?.change((state) => state.where((e) => !e.tags.contains('settings')).toList()),
+            () => App.controllerOf(context)?.change((state) => state.where((e) => e.alias != Routes.settings).toList()),
       ),
       title: const Text('Settings'),
     ),
