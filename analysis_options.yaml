@@ -74,6 +74,7 @@ linter:
   rules:
     # Enabling rules
     unnecessary_async: true
+    public_member_api_docs: true
     prefer_relative_imports: true
     avoid_relative_lib_imports: true
 

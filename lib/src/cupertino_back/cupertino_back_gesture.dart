@@ -15,6 +15,19 @@ import 'package:flutter/material.dart';
 /// The type `T` specifies the return type of the route with which this gesture
 /// detector is associated.
 class CupertinoBackGestureDetector<T> extends StatefulWidget {
+  /// {@macro cupertino_back_gesture_detector}
+  /// ```dart
+  /// CupertinoBackGestureDetector<T>(
+  ///   enabledCallback: () => true,
+  ///   onStartPopGesture: () => CupertinoBackGestureController(
+  ///     navigator: navigator,
+  ///     controller: controller,
+  ///     getIsActive: () => isActive,
+  ///     getIsCurrent: () => isCurrent,
+  ///   ),
+  ///   child: child,
+  /// );
+  /// ```
   const CupertinoBackGestureDetector({
     required this.enabledCallback,
     required this.onStartPopGesture,
@@ -22,10 +35,23 @@ class CupertinoBackGestureDetector<T> extends StatefulWidget {
     super.key,
   });
 
+  /// The child widget.
   final Widget child;
 
+  /// The callback function that will be called to check if the gesture is enabled.
   final ValueGetter<bool> enabledCallback;
 
+  /// The callback function that will be called to start the pop gesture.
+  ///
+  /// It must return a [CupertinoBackGestureController] instance.
+  /// ```dart
+  /// onStartPopGesture = CupertinoBackGestureController(
+  ///   navigator: navigator,
+  ///   controller: controller,
+  ///   getIsActive: () => isActive,
+  ///   getIsCurrent: () => isCurrent,
+  /// );
+  /// ```
   final ValueGetter<CupertinoBackGestureController<T>> onStartPopGesture;
 
   @override
@@ -40,12 +66,11 @@ class _CupertinoBackGestureDetectorState<T> extends State<CupertinoBackGestureDe
   @override
   void initState() {
     super.initState();
-    _recognizer =
-        HorizontalDragGestureRecognizer(debugOwner: this)
-          ..onStart = _handleDragStart
-          ..onUpdate = _handleDragUpdate
-          ..onEnd = _handleDragEnd
-          ..onCancel = _handleDragCancel;
+    _recognizer = HorizontalDragGestureRecognizer(debugOwner: this)
+      ..onStart = _handleDragStart
+      ..onUpdate = _handleDragUpdate
+      ..onEnd = _handleDragEnd
+      ..onCancel = _handleDragCancel;
   }
 
   @override
@@ -150,9 +175,16 @@ class CupertinoBackGestureController<T> {
     navigator.didStartUserGesture();
   }
 
+  /// The animation controller.
   final AnimationController controller;
+
+  /// The navigator state.
   final NavigatorState navigator;
+
+  /// The callback function that will be called to check if the route is active.
   final ValueGetter<bool> getIsActive;
+
+  /// The callback function that will be called to check if the route is current.
   final ValueGetter<bool> getIsCurrent;
 
   /// The drag gesture has changed by [delta]. The total range of the drag

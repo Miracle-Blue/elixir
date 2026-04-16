@@ -16,8 +16,10 @@ abstract interface class ElixirStateObserver implements ValueListenable<ElixirNa
   void setHistory(Iterable<ElixirHistoryEntry> history);
 }
 
+/// Elixir history entry
 @immutable
 final class ElixirHistoryEntry implements Comparable<ElixirHistoryEntry> {
+  /// {@macro elixir_history_entry}
   ElixirHistoryEntry({required this.state, DateTime? timestamp}) : timestamp = timestamp ?? DateTime.now();
 
   /// Navigation state
@@ -39,6 +41,7 @@ final class ElixirHistoryEntry implements Comparable<ElixirHistoryEntry> {
 
 /// Elixir state observer implementation
 final class ElixirObserver$NavigatorImpl with ChangeNotifier implements ElixirStateObserver {
+  /// {@macro elixir_observer_navigator_impl}
   ElixirObserver$NavigatorImpl(ElixirNavigationState initialState, [List<ElixirHistoryEntry>? history])
     : _value = initialState,
       _history = history?.toSet().toList() ?? [] {
@@ -49,8 +52,10 @@ final class ElixirObserver$NavigatorImpl with ChangeNotifier implements ElixirSt
     _history.sort();
   }
 
+  /// Navigation state
   ElixirNavigationState _value;
 
+  /// History
   final List<ElixirHistoryEntry> _history;
 
   @override
@@ -67,6 +72,7 @@ final class ElixirObserver$NavigatorImpl with ChangeNotifier implements ElixirSt
   @override
   ElixirNavigationState get value => _value;
 
+  /// State changer callback.
   bool changeState(ElixirNavigationState Function(ElixirNavigationState state) fn) {
     final prev = _value;
     final next = fn(prev);

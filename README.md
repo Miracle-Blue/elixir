@@ -179,6 +179,7 @@ class SettingsScreen extends StatelessWidget {
 ### ElixirPage
 
 An abstract base class for defining navigation pages. Each page must implement:
+
 - `child`: The widget to display
 - `name`: A unique name for the page
 - `tags`: A set of tags for page identification
@@ -246,6 +247,7 @@ final class SettingsPage extends AppPage {
       : super(child: SettingsScreen(data: data), name: 'settings');
 
   @override
+  Route<void> createRoute(BuildContext context) =>
   Route<void> createRoute(BuildContext context) => 
       CustomMaterialRoute(page: this);
 

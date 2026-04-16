@@ -99,6 +99,9 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
 
   /// The custom observer.
   late final ElixirObserver$NavigatorImpl _observer;
+
+  /// The custom observer.
+  /// For example: `Elixir.observer`.
   ElixirStateObserver get observer => _observer;
 
   /// The current pages list.

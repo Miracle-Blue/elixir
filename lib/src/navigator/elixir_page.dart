@@ -1,8 +1,12 @@
 import 'package:flutter/foundation.dart' show shortHash;
 import 'package:flutter/material.dart';
 
+/// {@template elixir_page}
+/// Elixir page.
+/// {@endtemplate}
 @immutable
 abstract base class ElixirPage extends Page<void> {
+  /// {@macro elixir_page}
   const ElixirPage({
     required super.name,
     required this.child,
@@ -10,10 +14,13 @@ abstract base class ElixirPage extends Page<void> {
     super.key,
   });
 
+  /// The child widget.
   final Widget child;
 
+  /// Tags of the page.
   abstract final Set<String> tags;
 
+  /// Alias of the page.
   abstract final ElixirAlias alias;
 
   @override
@@ -43,6 +50,31 @@ abstract base class ElixirPage extends Page<void> {
       identical(this, other) || other is ElixirPage && key == other.key && name == other.name;
 }
 
+/// Elixir alias.
+///
+/// ```dart
+/// enum Routes implements ElixirAlias, Comparable< Routes > {
+///   home('home'),
+///   settings('settings');
+///
+///   /// {@macro routes}
+///   const Routes(this.value);
+///
+///   /// Value of the enum
+///   final String value;
+///
+///   @override
+///   String get alias => value;
+///
+///   @override
+///   int compareTo(Routes other) => index.compareTo(other.index);
+///
+///   @override
+///   String toString() => value;
+/// }
+/// ```
+/// Alias must be unique and immutable.
 abstract interface class ElixirAlias {
+  /// Alias of the page.
   String get alias;
 }
