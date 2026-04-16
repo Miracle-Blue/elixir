@@ -237,12 +237,6 @@ Elixir.navigatorOf(context) // NavigatorState?
 Guards are functions that intercept and transform every navigation state change. They run sequentially — each guard receives the output of the previous one.
 
 ```dart
-typedef ElixirGuard = List<
-  ElixirNavigationState Function(BuildContext context, ElixirNavigationState state)
->;
-```
-
-```dart
 guards: [
   // Ensure at least one page
   (context, state) => state.length > 1 ? state : [const HomePage()],
