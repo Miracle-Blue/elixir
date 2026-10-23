@@ -3,6 +3,12 @@ import 'package:flutter/widgets.dart';
 
 /// {@template elixir_page}
 /// Elixir page.
+///
+/// Subclasses must implement [createRoute], usually once in a shared base page:
+/// ```dart
+/// @override
+/// Route<void> createRoute(BuildContext context) => MaterialPageRoute(builder: (context) => child, settings: this);
+/// ```
 /// {@endtemplate}
 @immutable
 abstract base class ElixirPage extends Page<void> {

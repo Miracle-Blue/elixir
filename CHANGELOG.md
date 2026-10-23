@@ -1,3 +1,9 @@
+## 0.4.0
+
+- **Breaking:** `ElixirPage.createRoute` no longer defaults to `MaterialPageRoute`; every page (or a shared base page class) must implement it
+- The package now imports only `package:flutter/widgets.dart`, so it no longer depends on Material and works with Cupertino or custom routes
+- Example: light/dark theme toggle and Cupertino page transitions through `ThemeData.pageTransitionsTheme`
+
 ## 0.3.0
 
 - **Breaking:** `ElixirStateObserver` replaced by `ElixirObserver`. `context.elixir.observer` now returns one observer created by the root Elixir and shared with every nested Elixir; listeners are `(elixir, previous, next)` callbacks instead of `VoidCallback`

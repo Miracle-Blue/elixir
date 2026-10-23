@@ -1,11 +1,10 @@
-/// Library for the Elixir navigation package.
+/// Declarative Navigator 2.0 navigation built on widgets only (no Material dependency).
 /// ```dart
 /// import 'package:elixir/elixir.dart';
-/// ```
-/// // Use the extension methods
-/// context.elixir;
-/// context.elixir.controller.change((state) => [...state, page]);
-/// context.elixir.controller.popUntil('settings');
+///
+/// context.elixir.push(page);
+/// context.elixir.change((state) => [...state, page]);
+/// context.elixir.popUntil(Routes.settings);
 /// ```
 library;
 

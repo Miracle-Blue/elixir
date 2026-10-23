@@ -7,7 +7,9 @@ A declarative navigation package for Flutter built on top of Navigator 2.0. Elix
 - ✅ Declarative navigation with immutable page stack
 - ✅ Type-safe page definitions with `ElixirAlias` enum routing
 - ✅ Navigation guards for access control and state validation
-- ✅ Navigation history tracking with timestamped entries
+- ✅ Global and scoped navigation observers
+- ✅ Nested Elixirs with innermost-first system back button handling
+- ✅ No Material dependency: pages build any `Route` (Material, Cupertino or custom)
 - ✅ Custom per-page route transitions
 - ✅ iOS-style swipe-back gesture support (`CupertinoBackGestureDetector`)
 - ✅ Programmatic navigation via `ValueNotifier` controller
@@ -59,12 +61,15 @@ enum Routes implements ElixirAlias, Comparable<Routes> {
 
 ### 2. Define Pages
 
-Create a sealed page hierarchy extending `ElixirPage`. Each page must provide `tags` and `alias`:
+Create a sealed page hierarchy extending `ElixirPage`. Each page must provide `tags`, `alias` and `createRoute` (usually once, in the base class):
 
 ```dart
 @immutable
 sealed class AppPage extends ElixirPage {
   const AppPage({required super.name, required super.child, super.arguments, super.key});
+
+  @override
+  Route<void> createRoute(BuildContext context) => MaterialPageRoute(builder: (context) => child, settings: this);
 
   @override
   String toString() => '/$name${arguments.isEmpty ? '' : '~$arguments'}';
@@ -185,7 +190,7 @@ Abstract base class for pages. Extends Flutter's `Page<void>`.
 | `alias`         | `ElixirAlias`          | Unique route alias (typically an enum value)                     |
 | `arguments`     | `Map<String, Object?>` | Optional arguments passed to the page                            |
 | `key`           | `LocalKey`             | Auto-generated from name and arguments hash                      |
-| `createRoute()` | `Route<void>`          | Defaults to `MaterialPageRoute`; override for custom transitions |
+| `createRoute()` | `Route<void>`          | Required; builds the route, e.g. `MaterialPageRoute`              |
 
 ### ElixirAlias
 
@@ -282,7 +287,22 @@ Elixir(
 
 ## Custom Transitions
 
-Override `createRoute()` on a page to provide a custom route:
+`MaterialPageRoute` animates with `ThemeData.pageTransitionsTheme`, so one theme setting changes every page:
+
+```dart
+MaterialApp(
+  theme: ThemeData(
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      },
+    ),
+  ),
+)
+```
+
+For a single page, override `createRoute()` on it:
 
 ```dart
 final class SettingsPage extends AppPage {
