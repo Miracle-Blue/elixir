@@ -47,6 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
       title: const Text('Home'),
       actions: [
         IconButton(
+          icon: Icon(Theme.of(context).brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode),
+          onPressed: () => App.toggleThemeOf(context),
+        ),
+        IconButton(
           icon: const Icon(Icons.settings),
           onPressed:
               () => App.navigatorOf(context)?.change((state) => [...state, SettingsScopePage(data: 'Data from home')]),

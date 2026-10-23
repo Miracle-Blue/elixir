@@ -56,8 +56,8 @@ final class HomePage extends AppPage {
 final class SettingsScopePage extends AppPage {
   SettingsScopePage({required final String data}) : super(child: SettingsScope(data: data), name: 'settings_scope');
 
-  @override
-  Route<void> createRoute(BuildContext context) => CustomMaterialRoute(page: this);
+  // @override
+  // Route<void> createRoute(BuildContext context) => CustomMaterialRoute(page: this);
 
   @override
   Set<String> get tags => {'settings_scope'};

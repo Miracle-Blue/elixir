@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart' show shortHash;
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// {@template elixir_page}
 /// Elixir page.
@@ -24,7 +24,8 @@ abstract base class ElixirPage extends Page<void> {
   abstract final ElixirAlias alias;
 
   @override
-  Route<void> createRoute(BuildContext context) => MaterialPageRoute(builder: (context) => child, settings: this);
+  Route<void> createRoute(BuildContext context) =>
+      PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => child, settings: this);
 
   @override
   String get name => alias.alias;

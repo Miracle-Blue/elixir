@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import '../navigator/elixir_page.dart';
 import '../navigator/navigator.dart';
@@ -33,7 +33,7 @@ extension ElixirControllerExtension on ValueNotifier<ElixirNavigationState> {
   /// ```dart
   /// context.elixir.change((state) => state.where((page) => page.alias == Alias.home).toList());
   /// ```
-  /// 
+  ///
   /// ... and more.
   void change(ElixirNavigationState Function(ElixirNavigationState pages) fn) {
     final prev = value.toList();
