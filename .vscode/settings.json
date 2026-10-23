@@ -5,5 +5,10 @@
     "editor.formatOnType": true,
     "editor.rulers": [120]
   },
+  // ── Git ───────────────────────────────────────────────────────
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.openRepositoryInParentFolders": "never",
+  // ── CSpell ────────────────────────────────────────────────────
   "cSpell.words": ["Cupertino", "endtemplate", "pubspec"]
 }

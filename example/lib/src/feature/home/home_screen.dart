@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../common/routes/routes.dart';
 import '../../common/widget/app.dart';
 
-ElixirStateObserver? elixirStateObserver;
+ElixirObserver? elixirStateObserver;
 
 /// {@template home_screen}
 /// HomeScreen widget.
@@ -20,9 +20,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void updateUI() {
+  void updateUI(ElixirState elixir, ElixirNavigationState previous, ElixirNavigationState next) {
     setState(() {});
-    log(elixirStateObserver?.value.join() ?? '');
+    log('\n =========== Global Listener ================================ ');
+    log(elixir.name?.alias ?? '');
+    log(next.join());
+    log(' ================================================ \n');
   }
 
   @override
@@ -46,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         IconButton(
           icon: const Icon(Icons.settings),
           onPressed:
-              () => App.controllerOf(context)?.change((state) => [...state, SettingsPage(data: 'Data from home')]),
+              () => App.navigatorOf(context)?.change((state) => [...state, SettingsScopePage(data: 'Data from home')]),
         ),
       ],
     ),
