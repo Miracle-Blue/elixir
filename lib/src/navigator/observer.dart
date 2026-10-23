@@ -1,89 +1,33 @@
-import 'dart:collection';
-
-import 'package:flutter/foundation.dart';
-
 import 'navigator.dart';
 
-/// Elixir state observer
-abstract interface class ElixirStateObserver implements ValueListenable<ElixirNavigationState> {
-  /// Max history length.
-  static const int maxHistoryLength = 10000;
+/// Called after [elixir]'s pages changed from [previous] to [next].
+typedef ElixirListener =
+    void Function(ElixirState elixir, ElixirNavigationState previous, ElixirNavigationState next);
 
-  /// History.
-  List<ElixirHistoryEntry> get history;
+/// Navigation observer shared by the root Elixir and every Elixir nested inside it.
+/// For example: `context.elixir.observer.addListener((elixir, previous, next) {})`.
+abstract interface class ElixirObserver {
+  /// Calls [listener] after any Elixir in the tree changes its pages.
+  void addListener(ElixirListener listener);
 
-  /// Set history
-  void setHistory(Iterable<ElixirHistoryEntry> history);
+  /// Stops calling [listener].
+  void removeListener(ElixirListener listener);
 }
 
-/// Elixir history entry
-@immutable
-final class ElixirHistoryEntry implements Comparable<ElixirHistoryEntry> {
-  /// {@macro elixir_history_entry}
-  ElixirHistoryEntry({required this.state, DateTime? timestamp}) : timestamp = timestamp ?? DateTime.now();
-
-  /// Navigation state
-  final ElixirNavigationState state;
-
-  /// Timestamp of the entry
-  final DateTime timestamp;
+/// [ElixirObserver] owned by the root Elixir.
+final class ElixirObserver$NavigatorImpl implements ElixirObserver {
+  final List<ElixirListener> _listeners = [];
 
   @override
-  int compareTo(covariant ElixirHistoryEntry other) => timestamp.compareTo(other.timestamp);
+  void addListener(ElixirListener listener) => _listeners.add(listener);
 
   @override
-  late final int hashCode = state.hashCode ^ timestamp.hashCode;
+  void removeListener(ElixirListener listener) => _listeners.remove(listener);
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is ElixirHistoryEntry && state == other.state && timestamp == other.timestamp;
-}
-
-/// Elixir state observer implementation
-final class ElixirObserver$NavigatorImpl with ChangeNotifier implements ElixirStateObserver {
-  /// {@macro elixir_observer_navigator_impl}
-  ElixirObserver$NavigatorImpl(ElixirNavigationState initialState, [List<ElixirHistoryEntry>? history])
-    : _value = initialState,
-      _history = history?.toSet().toList() ?? [] {
-    // Add the initial state to the history.
-    if (_history.isEmpty || _history.last.state != initialState) {
-      _history.add(ElixirHistoryEntry(state: initialState, timestamp: DateTime.now()));
+  /// Calls every listener. The copy lets a listener remove itself while being called.
+  void notify(ElixirState elixir, ElixirNavigationState previous, ElixirNavigationState next) {
+    for (final listener in _listeners.toList()) {
+      listener(elixir, previous, next);
     }
-    _history.sort();
-  }
-
-  /// Navigation state
-  ElixirNavigationState _value;
-
-  /// History
-  final List<ElixirHistoryEntry> _history;
-
-  @override
-  List<ElixirHistoryEntry> get history => UnmodifiableListView<ElixirHistoryEntry>(_history);
-
-  @override
-  void setHistory(Iterable<ElixirHistoryEntry> history) {
-    _history
-      ..clear()
-      ..addAll(history)
-      ..sort();
-  }
-
-  @override
-  ElixirNavigationState get value => _value;
-
-  /// State changer callback.
-  bool changeState(ElixirNavigationState Function(ElixirNavigationState state) fn) {
-    final prev = _value;
-    final next = fn(prev);
-    if (identical(next, prev)) return false;
-    _value = next;
-
-    late final historyEntry = ElixirHistoryEntry(state: next, timestamp: DateTime.now());
-    _history.add(historyEntry);
-    if (_history.length > ElixirStateObserver.maxHistoryLength) _history.removeAt(0);
-
-    notifyListeners();
-    return true;
   }
 }

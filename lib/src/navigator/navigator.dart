@@ -21,6 +21,7 @@ class Elixir extends StatefulWidget {
     required this.pages,
     this.guards = const [],
     this.observers = const [],
+    this.listeners = const [],
     this.transitionDelegate = const DefaultTransitionDelegate<Object?>(),
     this.revalidate,
     this.onBackButtonPressed,
@@ -33,6 +34,7 @@ class Elixir extends StatefulWidget {
     required ValueNotifier<ElixirNavigationState> this.controller,
     this.guards = const [],
     this.observers = const [],
+    this.listeners = const [],
     this.transitionDelegate = const DefaultTransitionDelegate<Object?>(),
     this.revalidate,
     this.onBackButtonPressed,
@@ -73,6 +75,9 @@ class Elixir extends StatefulWidget {
   /// Observers to attach to the navigator.
   final List<NavigatorObserver> observers;
 
+  /// Called after this Elixir or any Elixir nested inside it changes its pages.
+  final List<ElixirListener> listeners;
+
   /// The transition delegate to use for the navigator.
   final TransitionDelegate<Object?> transitionDelegate;
 
@@ -101,12 +106,13 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
   NavigatorState? get navigator => _navigatorObserver.navigator;
   final NavigatorObserver _navigatorObserver = NavigatorObserver();
 
-  /// The custom observer.
-  late final ElixirObserver$NavigatorImpl _observer;
+  /// Created only by the root Elixir, see [_rootObserver].
+  late final ElixirObserver$NavigatorImpl _observer = ElixirObserver$NavigatorImpl();
 
-  /// The custom observer.
-  /// For example: `Elixir.observer`.
-  ElixirStateObserver get observer => _observer;
+  /// The observer shared by the root Elixir and all nested Elixirs.
+  /// For example: `context.elixir.observer`.
+  ElixirObserver get observer => _rootObserver;
+  ElixirObserver$NavigatorImpl get _rootObserver => _parent?._rootObserver ?? _observer;
 
   /// The current pages list.
   ElixirNavigationState get state => _state;
@@ -126,8 +132,6 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     super.initState();
     _state = widget.pages;
     widget.revalidate?.addListener(revalidate);
-
-    _observer = ElixirObserver$NavigatorImpl(_state);
 
     _observers = <NavigatorObserver>[_navigatorObserver, ...widget.observers];
     widget.controller?.addListener(_controllerListener);
@@ -231,8 +235,20 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
         ..value = _state
         ..addListener(_controllerListener);
     }
+  }
 
-    _observer.changeState((_) => _state);
+  /// Applies [next] and notifies scoped listeners and the global observer.
+  void _updateState(ElixirNavigationState next) {
+    final previous = _state;
+    _state = UnmodifiableListView<ElixirPage>(next);
+    _setStateToController();
+    setState(() {});
+    // Scoped listeners of this Elixir and its ancestors; the Set calls a shared one once.
+    final listeners = {for (ElixirState? e = this; e != null; e = e._parent) ...e.widget.listeners};
+    for (final listener in listeners) {
+      listener(this, previous, _state);
+    }
+    _rootObserver.notify(this, previous, _state);
   }
 
   void _controllerListener() {
@@ -245,9 +261,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     if (next.isEmpty || listEquals(next, _state)) {
       _setStateToController(); // Revert the controller value.
     } else {
-      _state = UnmodifiableListView<ElixirPage>(next);
-      _setStateToController();
-      setState(() {});
+      _updateState(next);
     }
   }
 
@@ -257,9 +271,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     final ctx = context;
     final next = widget.guards.fold(_state.toList(), (s, g) => g(ctx, s));
     if (next.isEmpty || listEquals(next, _state)) return;
-    _state = UnmodifiableListView<ElixirPage>(next);
-    _setStateToController();
-    setState(() {});
+    _updateState(next);
   }
 
   /// Change the pages.
@@ -271,9 +283,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
     final ctx = context;
     next = widget.guards.fold(next, (s, g) => g(ctx, s));
     if (next.isEmpty || listEquals(next, _state)) return;
-    _state = UnmodifiableListView<ElixirPage>(next);
-    _setStateToController();
-    setState(() {});
+    _updateState(next);
   }
 
   /// Called when a page is removed from the stack.

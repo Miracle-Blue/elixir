@@ -208,7 +208,7 @@ The state object exposed via `context.elixir` or `Elixir.of(context)`:
 | `reset(ElixirPage)`     | Reset to the initial pages                              |
 | `revalidate()`          | Re-run all guards against the current stack             |
 | `state`                 | Current `ElixirNavigationState`                         |
-| `observer`              | `ElixirStateObserver` for tracking history              |
+| `observer`              | `ElixirObserver` shared by the root and nested Elixirs  |
 | `navigator`             | Underlying `NavigatorState`                             |
 
 ### Static Access
@@ -228,6 +228,7 @@ Elixir.navigatorOf(context) // NavigatorState?
 | `controller`          | `ValueNotifier<ElixirNavigationState>?` | External controller (`.controlled` constructor)                        |
 | `guards`              | `ElixirGuard`                           | List of guard functions applied on every state change                  |
 | `observers`           | `List<NavigatorObserver>`               | Flutter navigator observers                                            |
+| `listeners`           | `List<ElixirListener>`                  | Called on page changes of this Elixir and all nested Elixirs           |
 | `transitionDelegate`  | `TransitionDelegate`                    | Controls transition behavior (defaults to `DefaultTransitionDelegate`) |
 | `revalidate`          | `Listenable?`                           | When notified, re-runs guards against current state                    |
 | `onBackButtonPressed` | `Function?`                             | Custom system back button handler; returns `({state, handled})`        |
@@ -255,23 +256,25 @@ guards: [
 
 If guards produce an empty list or a list equal to the current state, the navigation change is rejected.
 
-## Navigation History
+## Observing Navigation
 
-Track navigation changes via the observer:
+The root Elixir creates one `ElixirObserver`, shared with every nested Elixir. Its listeners are called whenever any Elixir in the tree changes its pages, with the Elixir that changed:
 
 ```dart
-final observer = context.elixir.observer;
+void onChange(ElixirState elixir, ElixirNavigationState previous, ElixirNavigationState next) =>
+    print('$previous -> $next');
 
-// Listen for state changes
-observer.addListener(() {
-  final currentState = observer.value;
-});
+context.elixir.observer.addListener(onChange);    // from any Elixir, root or nested
+context.elixir.observer.removeListener(onChange);
+```
 
-// Access timestamped history (up to 10,000 entries)
-final history = observer.history; // List<ElixirHistoryEntry>
-for (final entry in history) {
-  print('${entry.timestamp}: ${entry.state}');
-}
+To listen to one part of the tree only, pass `listeners` to that Elixir. They are called for it and every Elixir nested inside it:
+
+```dart
+Elixir(
+  listeners: [(elixir, previous, next) => print('$previous -> $next')],
+  pages: [const SettingsPage()],
+);
 ```
 
 ## Custom Transitions
