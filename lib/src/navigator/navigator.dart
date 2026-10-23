@@ -85,6 +85,10 @@ class Elixir extends StatefulWidget {
   /// otherwise, return a boolean with false.
   ///
   /// Also you can mutate the [AppNavigationState] to change the navigation stack.
+  ///
+  /// Nested Elixirs are asked first (innermost active one wins).
+  /// A nested Elixir with a single page, or one returning `handled: false`,
+  /// passes the back press to its parent Elixir.
   final ({ElixirNavigationState state, bool handled}) Function(ElixirNavigationState state)? onBackButtonPressed;
 
   @override
@@ -110,6 +114,12 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
   late ElixirNavigationState _state;
   List<NavigatorObserver> _observers = const [];
 
+  /// The closest ancestor Elixir, null for the root one.
+  ElixirState? _parent;
+
+  /// Nested Elixirs registered under this one.
+  final Set<ElixirState> _children = <ElixirState>{};
+
   /* #region Lifecycle */
   @override
   void initState() {
@@ -128,6 +138,12 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // Our own _InheritedElixir is below this context, so this finds the ancestor.
+    final parent = Elixir.maybeOf(context, listen: true);
+    if (!identical(parent, _parent)) {
+      _parent?._children.remove(this);
+      _parent = parent?.._children.add(this);
+    }
     revalidate();
   }
 
@@ -151,6 +167,7 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _parent?._children.remove(this);
     widget.controller?.removeListener(_controllerListener);
     widget.revalidate?.removeListener(revalidate);
     super.dispose();
@@ -177,20 +194,34 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
   /// Clear the pages to the initial state.
   void reset(ElixirPage page) => change((_) => widget.pages);
 
+  // Only the root Elixir answers the binding; it dispatches to nested ones.
   @override
-  Future<bool> didPopRoute() {
+  Future<bool> didPopRoute() => SynchronousFuture(_parent == null && _handleBackButton());
+
+  /// Whether this Elixir is in the parent's top route and not a hidden tab.
+  bool get _isActive => mounted && (ModalRoute.isCurrentOf(context) ?? true) && Visibility.of(context);
+
+  /// Active nested Elixirs handle the back press first, then this one.
+  bool _handleBackButton() {
+    for (final child in _children) {
+      if (child._isActive && child._handleBackButton()) return true;
+    }
+
+    // A nested Elixir with a single page defers to its parent.
+    if (_parent != null && _state.length < 2) return false;
+
     // If the back button handler is defined, call it.
     final backButtonHandler = widget.onBackButtonPressed;
     if (backButtonHandler != null) {
       final result = backButtonHandler(_state.toList());
       change((pages) => result.state);
-      return SynchronousFuture(result.handled);
+      return result.handled;
     }
 
     // Otherwise, handle the back button press with the default behavior.
-    if (_state.length < 2) return SynchronousFuture(false);
+    if (_state.length < 2) return false;
     _onDidRemovePage(_state.last);
-    return SynchronousFuture(true);
+    return true;
   }
 
   void _setStateToController() {
