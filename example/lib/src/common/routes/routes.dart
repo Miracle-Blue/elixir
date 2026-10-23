@@ -28,28 +28,6 @@ enum AppRoutes implements ElixirAlias, Comparable<AppRoutes> {
   String toString() => value;
 }
 
-/// {@template routes}
-/// Routes enumeration
-/// {@endtemplate}
-enum Settings implements ElixirAlias, Comparable<Settings> {
-  settings('settings'),
-  settingsDialog('settings_dialog');
-
-  const Settings(this.value);
-
-  /// Value of the enum
-  final String value;
-
-  @override
-  String get alias => value;
-
-  @override
-  int compareTo(Settings other) => index.compareTo(other.index);
-
-  @override
-  String toString() => value;
-}
-
 /// Type definition for the page.
 @immutable
 sealed class AppPage extends ElixirPage {
@@ -86,6 +64,30 @@ final class SettingsScopePage extends AppPage {
 
   @override
   ElixirAlias get alias => AppRoutes.settings;
+}
+
+/// *** ========================= Settings Scope =========================
+
+/// {@template routes}
+/// Routes enumeration
+/// {@endtemplate}
+enum Settings implements ElixirAlias, Comparable<Settings> {
+  settings('settings'),
+  settingsDialog('settings_dialog');
+
+  const Settings(this.value);
+
+  /// Value of the enum
+  final String value;
+
+  @override
+  String get alias => value;
+
+  @override
+  int compareTo(Settings other) => index.compareTo(other.index);
+
+  @override
+  String toString() => value;
 }
 
 final class SettingsPage extends AppPage {
