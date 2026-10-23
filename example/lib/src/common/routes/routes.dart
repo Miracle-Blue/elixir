@@ -34,6 +34,9 @@ sealed class AppPage extends ElixirPage {
   const AppPage({required super.name, required super.child, super.arguments, super.key});
 
   @override
+  Route<void> createRoute(BuildContext context) => MaterialPageRoute(builder: (context) => child, settings: this);
+
+  @override
   int get hashCode => key.hashCode;
 
   @override

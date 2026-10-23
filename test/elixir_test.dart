@@ -22,6 +22,9 @@ final class _Page extends ElixirPage {
 
   @override
   Set<String> get tags => const {};
+
+  @override
+  Route<void> createRoute(BuildContext context) => MaterialPageRoute(builder: (context) => child, settings: this);
 }
 
 ({ElixirNavigationState state, bool handled}) _removeLast(ElixirNavigationState state) =>

@@ -23,9 +23,9 @@ abstract base class ElixirPage extends Page<void> {
   /// Alias of the page.
   abstract final ElixirAlias alias;
 
-  @override
-  Route<void> createRoute(BuildContext context) =>
-      PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => child, settings: this);
+  // @override
+  // Route<void> createRoute(BuildContext context) =>
+  //     PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => child, settings: this);
 
   @override
   String get name => alias.alias;
