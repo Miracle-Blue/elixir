@@ -19,6 +19,7 @@ class Elixir extends StatefulWidget {
   /// {@macro navigator}
   Elixir({
     required this.pages,
+    this.name,
     this.guards = const [],
     this.observers = const [],
     this.listeners = const [],
@@ -32,6 +33,7 @@ class Elixir extends StatefulWidget {
   /// {@macro navigator}
   Elixir.controlled({
     required ValueNotifier<ElixirNavigationState> this.controller,
+    this.name,
     this.guards = const [],
     this.observers = const [],
     this.listeners = const [],
@@ -68,6 +70,9 @@ class Elixir extends StatefulWidget {
 
   /// The controller to use for the navigator.
   final ValueNotifier<ElixirNavigationState>? controller;
+
+  /// Optional name to tell Elixirs apart, e.g. in listeners: `elixir.name == Scopes.settings`.
+  final ElixirAlias? name;
 
   /// Guards to apply to the pages.
   final ElixirGuard guards;
@@ -116,6 +121,9 @@ class ElixirState extends State<Elixir> with WidgetsBindingObserver {
 
   /// The current pages list.
   ElixirNavigationState get state => _state;
+
+  /// The name given to this Elixir, if any.
+  ElixirAlias? get name => widget.name;
 
   late ElixirNavigationState _state;
   List<NavigatorObserver> _observers = const [];

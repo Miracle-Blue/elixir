@@ -208,6 +208,7 @@ The state object exposed via `context.elixir` or `Elixir.of(context)`:
 | `reset(ElixirPage)`     | Reset to the initial pages                              |
 | `revalidate()`          | Re-run all guards against the current stack             |
 | `state`                 | Current `ElixirNavigationState`                         |
+| `name`                  | Name given to this Elixir, if any                       |
 | `observer`              | `ElixirObserver` shared by the root and nested Elixirs  |
 | `navigator`             | Underlying `NavigatorState`                             |
 
@@ -226,6 +227,7 @@ Elixir.navigatorOf(context) // NavigatorState?
 | --------------------- | --------------------------------------- | ---------------------------------------------------------------------- |
 | `pages`               | `ElixirNavigationState`                 | Initial page stack                                                     |
 | `controller`          | `ValueNotifier<ElixirNavigationState>?` | External controller (`.controlled` constructor)                        |
+| `name`                | `ElixirAlias?`                          | Optional name to tell Elixirs apart (`elixir.name`)                    |
 | `guards`              | `ElixirGuard`                           | List of guard functions applied on every state change                  |
 | `observers`           | `List<NavigatorObserver>`               | Flutter navigator observers                                            |
 | `listeners`           | `List<ElixirListener>`                  | Called on page changes of this Elixir and all nested Elixirs           |
@@ -261,8 +263,9 @@ If guards produce an empty list or a list equal to the current state, the naviga
 The root Elixir creates one `ElixirObserver`, shared with every nested Elixir. Its listeners are called whenever any Elixir in the tree changes its pages, with the Elixir that changed:
 
 ```dart
-void onChange(ElixirState elixir, ElixirNavigationState previous, ElixirNavigationState next) =>
-    print('$previous -> $next');
+void onChange(ElixirState elixir, ElixirNavigationState previous, ElixirNavigationState next) {
+  if (elixir.name == Scopes.settings) print('settings: $previous -> $next');
+}
 
 context.elixir.observer.addListener(onChange);    // from any Elixir, root or nested
 context.elixir.observer.removeListener(onChange);
